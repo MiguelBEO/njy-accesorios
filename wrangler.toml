@@ -1,9 +1,10 @@
 name = "njy-accesorios"
-compatibility_date = "2025-01-01"
+compatibility_date = "2026-07-07"
+compatibility_flags = ["nodejs_compat"]
 
 pages_build_output_dir = "dist"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "njy-db"
-database_id = ""
+database_id = "6dc110f1-5390-4fb8-8ae3-61396f104def"
