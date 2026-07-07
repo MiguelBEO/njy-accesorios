@@ -1,0 +1,49 @@
+---
+export interface Props {
+  slug: string
+  title: string
+  precio: number
+  imagen: string
+}
+
+const { slug, title, precio, imagen } = Astro.props
+---
+
+<button
+  id="add-to-cart-detail"
+  class="btn-primary w-full flex items-center justify-center gap-2 text-sm md:text-base"
+  data-slug={slug}
+  data-title={title}
+  data-precio={precio}
+  data-imagen={imagen}
+>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  Agregar al carrito
+</button>
+
+<script>
+  const btn = document.getElementById('add-to-cart-detail')
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const slug = btn.dataset.slug
+      const title = btn.dataset.title
+      const precio = Number(btn.dataset.precio)
+      const imagen = btn.dataset.imagen
+
+      const cart = JSON.parse(localStorage.getItem('njy-cart') || '[]')
+      const existing = cart.find(i => i.slug === slug)
+      if (existing) {
+        existing.cantidad++
+      } else {
+        cart.push({ slug, title, precio, cantidad: 1, imagen })
+      }
+      localStorage.setItem('njy-cart', JSON.stringify(cart))
+      window.dispatchEvent(new CustomEvent('njy-cart-update'))
+
+      btn.textContent = '✅ ¡Agregado!'
+      setTimeout(() => {
+        btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Agregar al carrito`
+      }, 2000)
+    })
+  }
+</script>

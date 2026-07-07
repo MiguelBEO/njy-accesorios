@@ -1,0 +1,69 @@
+---
+import type { CollectionEntry } from 'astro:content'
+
+export interface Props {
+  producto: CollectionEntry<'productos'>
+}
+
+const { producto } = Astro.props
+const { title, precio, categoria, imagen, destacado } = producto.data
+---
+
+<div class="product-card group">
+  <a href={`/producto/${producto.slug}`} class="block no-underline">
+    <div class="aspect-square overflow-hidden bg-rose-50 relative">
+      <img
+        src={imagen}
+        alt={title}
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        loading="lazy"
+      />
+      {destacado && (
+        <span class="absolute top-2 left-2 bg-gold-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">🌟 Destacado</span>
+      )}
+      <span class="absolute top-2 right-2 bg-rose-100 text-rose-700 text-[10px] font-medium px-2 py-0.5 rounded-full capitalize shadow-sm">{categoria}</span>
+    </div>
+    <div class="p-3 md:p-4">
+      <h3 class="font-display text-sm md:text-base text-[#2D2D2D] font-semibold truncate group-hover:text-rose-500 transition-colors">{title}</h3>
+      <p class="text-lg md:text-xl font-bold text-rose-800 mt-0.5">${precio} MXN</p>
+    </div>
+  </a>
+  <div class="px-3 md:px-4 pb-3 md:pb-4">
+    <button
+      class="add-to-cart-btn w-full py-2.5 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-700 font-medium text-xs md:text-sm transition-all active:scale-95 border-none cursor-pointer flex items-center justify-center gap-1.5"
+      data-slug={producto.slug}
+      data-title={title}
+      data-precio={precio}
+      data-imagen={imagen}
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Agregar al carrito
+    </button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const slug = btn.dataset.slug
+      const title = btn.dataset.title
+      const precio = Number(btn.dataset.precio)
+      const imagen = btn.dataset.imagen
+
+      const cart = JSON.parse(localStorage.getItem('njy-cart') || '[]')
+      const existing = cart.find(i => i.slug === slug)
+      if (existing) {
+        existing.cantidad++
+      } else {
+        cart.push({ slug, title, precio, cantidad: 1, imagen })
+      }
+      localStorage.setItem('njy-cart', JSON.stringify(cart))
+      window.dispatchEvent(new CustomEvent('njy-cart-update'))
+
+      btn.textContent = '✅ Agregado'
+      setTimeout(() => {
+        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Agregar al carrito`
+      }, 1500)
+    })
+  })
+</script>

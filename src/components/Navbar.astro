@@ -1,0 +1,36 @@
+---
+import CartIcon from './CartIcon.astro'
+---
+
+<header class="bg-cream-100/95 backdrop-blur-md sticky top-0 z-40 border-b border-rose-100">
+  <div class="container-main flex items-center justify-between h-16 md:h-20">
+    <a href="/" class="flex items-center gap-2 no-underline">
+      <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-rose-300 to-gold-400 flex items-center justify-center text-white font-bold text-sm md:text-base shadow-sm">
+        N&J
+      </div>
+      <div class="hidden sm:block">
+        <p class="font-display text-sm md:text-base text-rose-800 leading-tight font-semibold">N&J Accesorios</p>
+        <p class="font-script text-[10px] md:text-xs text-gold-600 leading-tight -mt-0.5">Detalles que te hacen brillar</p>
+      </div>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-6">
+      <a href="/" class="text-sm font-medium text-[#2D2D2D] hover:text-rose-500 transition-colors no-underline">Inicio</a>
+      <a href="/productos" class="text-sm font-medium text-[#2D2D2D] hover:text-rose-500 transition-colors no-underline">Catálogo</a>
+      <a href="/sobre-nosotros" class="text-sm font-medium text-[#2D2D2D] hover:text-rose-500 transition-colors no-underline">Sobre Nosotros</a>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="https://instagram.com/accesoriosnyv" target="_blank" rel="noopener noreferrer" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-rose-50 transition-colors" aria-label="Instagram">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B3A4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+        </svg>
+      </a>
+      <div class="md:hidden">
+        <CartIcon />
+      </div>
+    </div>
+  </div>
+</header>

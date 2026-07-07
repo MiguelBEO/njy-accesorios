@@ -1,0 +1,66 @@
+backend:
+  name: github
+  repo: tu-usuario/njy-accesorios
+  branch: main
+  base_url: https://github.com
+  auth_endpoint: oauth/authorize
+
+publish_mode: editorial_workflow
+media_folder: public/images
+public_folder: /images
+
+site_url: https://njy-accesorios.pages.dev
+display_url: https://njy-accesorios.pages.dev
+logo: /images/placeholder.svg
+
+locale: es
+
+collections:
+  - name: "productos"
+    label: "Productos"
+    label_singular: "Producto"
+    folder: "src/content/productos"
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    sort: "fecha:desc"
+    fields:
+      - { label: "Nombre", name: "title", widget: "string", required: true }
+      - { label: "Precio (MXN)", name: "precio", widget: "number", value_type: "int", min: 0, required: true }
+      - {
+          label: "Categoría",
+          name: "categoria",
+          widget: "select",
+          options: ["collares", "anillos", "labiales", "pulseras", "aretes", "maquillaje", "otros"],
+          required: true
+        }
+      - { label: "Imagen principal", name: "imagen", widget: "image", required: true, media_library: { config: { multiple: false } } }
+      - {
+          label: "Galería de imágenes",
+          name: "galeria",
+          widget: "list",
+          required: false,
+          summary: "{{fields.imagen}}",
+          field: { label: "Imagen", name: "imagen", widget: "image" }
+        }
+      - { label: "Destacado", name: "destacado", widget: "boolean", default: false, required: false }
+      - { label: "Descripción", name: "descripcion", widget: "text", required: true }
+      - { label: "Fecha de creación", name: "fecha", widget: "datetime", default: "", required: false }
+
+  - name: "configuracion"
+    label: "Configuración"
+    delete: false
+    editor:
+      preview: false
+    files:
+      - label: "Información del Sitio"
+        name: "site-config"
+        file: "src/content/configuracion/sitio.md"
+        fields:
+          - { label: "Nombre de la tienda", name: "tienda_nombre", widget: "string", default: "N&J Accesorios y Belleza" }
+          - { label: "Eslogan", name: "eslogan", widget: "string", default: "Detalles que te hacen brillar" }
+          - { label: "Número de WhatsApp", name: "whatsapp", widget: "string", default: "526181578134", pattern: ["^[0-9]+$", "Solo números, sin + ni espacios"] }
+          - { label: "Instagram", name: "instagram", widget: "string", default: "accesoriosnyv" }
+          - { label: "Descripción corta", name: "descripcion", widget: "text", default: "Accesorios y belleza hechos con amor para que brilles cada día." }

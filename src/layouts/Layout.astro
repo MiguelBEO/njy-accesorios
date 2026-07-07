@@ -1,0 +1,47 @@
+---
+import Navbar from '@/components/Navbar.astro'
+import Footer from '@/components/Footer.astro'
+import WhatsAppFloat from '@/components/WhatsAppFloat.astro'
+import MobileTabBar from '@/components/MobileTabBar.astro'
+import CartIcon from '@/components/CartIcon.astro'
+import CartDrawer from '@/components/CartDrawer.astro'
+
+export interface Props {
+  title?: string
+  descripcion?: string
+}
+
+const { title = 'N&J Accesorios y Belleza', descripcion = 'Descubre nuestra colección de accesorios y belleza. Collares, anillos, labiales y más. Detalles que te hacen brillar ✨' } = Astro.props
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFF8F0" />
+  <meta name="description" content={descripcion} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={descripcion} />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/images/og-image.jpg" />
+  <meta name="instagram:profile" content="@accesoriosnyv" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>{title}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body class="min-h-screen flex flex-col pb-16 md:pb-0">
+  <Navbar />
+  <CartIcon />
+
+  <main class="flex-1">
+    <slot />
+  </main>
+
+  <Footer />
+  <WhatsAppFloat />
+  <MobileTabBar />
+  <CartDrawer />
+</body>
+</html>

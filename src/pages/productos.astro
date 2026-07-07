@@ -1,0 +1,58 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import ProductGrid from '@/components/ProductGrid.astro'
+import { getCollection } from 'astro:content'
+
+const categoria = Astro.url.searchParams.get('categoria')
+const productos = await getCollection('productos')
+const categorias = [...new Set(productos.map(p => p.data.categoria))]
+
+const filtrados = categoria
+  ? productos.filter(p => p.data.categoria === categoria)
+  : productos
+
+const tituloPagina = categoria
+  ? `Catálogo - ${categoria.charAt(0).toUpperCase() + categoria.slice(1)}`
+  : 'Catálogo Completo'
+---
+
+<Layout title={`${tituloPagina} - N&J Accesorios y Belleza`}>
+  <section class="py-8 md:py-12">
+    <div class="container-main">
+      <h1 class="section-title mb-2">Catálogo</h1>
+      <p class="text-center text-sm text-[#2D2D2D]/60 mb-8">
+        {categoria
+          ? `Explora nuestra colección de ${categoria}`
+          : 'Descubre todos nuestros productos'}
+      </p>
+
+      <!-- Filtro de categorías -->
+      <div class="flex flex-wrap justify-center gap-2 mb-8">
+        <a
+          href="/productos"
+          class={`px-4 py-2 rounded-full text-sm font-medium transition-colors no-underline ${
+            !categoria
+              ? 'bg-rose-400 text-white shadow-sm'
+              : 'bg-white border border-rose-100 text-[#2D2D2D] hover:bg-rose-50'
+          }`}
+        >
+          Todas
+        </a>
+        {categorias.map(cat => (
+          <a
+            href={`/productos?categoria=${cat}`}
+            class={`px-4 py-2 rounded-full text-sm font-medium capitalize transition-colors no-underline ${
+              categoria === cat
+                ? 'bg-rose-400 text-white shadow-sm'
+                : 'bg-white border border-rose-100 text-[#2D2D2D] hover:bg-rose-50'
+            }`}
+          >
+            {cat}
+          </a>
+        ))}
+      </div>
+
+      <ProductGrid productos={filtrados} />
+    </div>
+  </section>
+</Layout>
