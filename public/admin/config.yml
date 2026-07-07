@@ -11,7 +11,9 @@ public_folder: /images
 
 site_url: https://njy-accesorios.pages.dev
 display_url: https://njy-accesorios.pages.dev
-logo: /images/placeholder.svg
+logo:
+  src: /images/placeholder.svg
+  alt: "N&J Accesorios y Belleza"
 
 locale: es
 
