@@ -1,14 +1,15 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 import ProductGrid from '@/components/ProductGrid.astro'
-import { getCollection } from 'astro:content'
+import { getProductos, getCategorias } from '@/lib/sanity'
 
 const categoria = Astro.url.searchParams.get('categoria')
-const productos = await getCollection('productos')
-const categorias = [...new Set(productos.map(p => p.data.categoria))]
+const productos = await getProductos()
+const categoriasList = await getCategorias()
+const categorias = categoriasList.map(c => c.slug)
 
 const filtrados = categoria
-  ? productos.filter(p => p.data.categoria === categoria)
+  ? productos.filter(p => p.categoriaSlug === categoria)
   : productos
 
 const tituloPagina = categoria

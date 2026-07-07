@@ -1,19 +1,20 @@
 ---
-import type { CollectionEntry } from 'astro:content'
+import type { ProductoSanity } from '@/lib/sanity'
+import { urlFor } from '@/lib/sanity'
 
 export interface Props {
-  producto: CollectionEntry<'productos'>
+  producto: ProductoSanity
 }
 
 const { producto } = Astro.props
-const { title, precio, categoria, imagen, destacado } = producto.data
+const { title, precio, categoria, slug, imagen, destacado } = producto
 ---
 
 <div class="product-card group">
-  <a href={`/producto/${producto.slug}`} class="block no-underline">
+  <a href={`/producto/${slug}`} class="block no-underline">
     <div class="aspect-square overflow-hidden bg-rose-50 relative">
       <img
-        src={imagen}
+        src={urlFor(imagen, 400)}
         alt={title}
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         loading="lazy"
@@ -31,10 +32,10 @@ const { title, precio, categoria, imagen, destacado } = producto.data
   <div class="px-3 md:px-4 pb-3 md:pb-4">
     <button
       class="add-to-cart-btn w-full py-2.5 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-700 font-medium text-xs md:text-sm transition-all active:scale-95 border-none cursor-pointer flex items-center justify-center gap-1.5"
-      data-slug={producto.slug}
+      data-slug={slug}
       data-title={title}
       data-precio={precio}
-      data-imagen={imagen}
+      data-imagen={urlFor(imagen)}
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Agregar al carrito

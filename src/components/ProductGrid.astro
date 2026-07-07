@@ -1,9 +1,9 @@
 ---
-import type { CollectionEntry } from 'astro:content'
+import type { ProductoSanity } from '@/lib/sanity'
 import ProductCard from './ProductCard.astro'
 
 export interface Props {
-  productos: CollectionEntry<'productos'>[]
+  productos: ProductoSanity[]
 }
 
 const { productos } = Astro.props

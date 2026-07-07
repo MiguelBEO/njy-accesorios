@@ -1,11 +1,12 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 import ProductGrid from '@/components/ProductGrid.astro'
-import { getCollection } from 'astro:content'
+import { getProductos, getCategorias } from '@/lib/sanity'
 
-const productos = await getCollection('productos')
-const destacados = productos.filter(p => p.data.destacado)
-const categorias = [...new Set(productos.map(p => p.data.categoria))]
+const productos = await getProductos()
+const destacados = productos.filter(p => p.destacado)
+const categoriasList = await getCategorias()
+const categorias = categoriasList.map(c => c.slug)
 ---
 
 <Layout title="N&J Accesorios y Belleza - Detalles que te hacen brillar">
