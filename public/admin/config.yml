@@ -2,8 +2,8 @@ backend:
   name: github
   repo: MiguelBEO/njy-accesorios
   branch: main
-  base_url: https://api.decapcms.org
-  auth_endpoint: auth
+  base_url: https://njy-oauth-proxy.victor70722.workers.dev
+  auth_endpoint: /auth
 
 publish_mode: editorial_workflow
 media_folder: public/images
