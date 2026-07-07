@@ -1,16 +1,17 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 import ProductGrid from '@/components/ProductGrid.astro'
-import { getProductos, getCategorias } from '@/lib/sanity'
+import { getProducts, getFeaturedProducts, getCategories, getSetting } from '@/lib/db'
 
-const productos = await getProductos()
-const destacados = productos.filter(p => p.destacado)
-const categoriasList = await getCategorias()
-const categorias = categoriasList.map(c => c.slug)
+const db = Astro.locals.runtime.env.DB
+const productos = await getProducts(db)
+const destacados = await getFeaturedProducts(db)
+const categoriasList = await getCategories(db)
+const siteName = await getSetting(db, 'site_name') || 'N&J Accesorios y Belleza'
+const siteTagline = await getSetting(db, 'site_tagline') || 'Detalles que te hacen brillar'
 ---
 
-<Layout title="N&J Accesorios y Belleza - Detalles que te hacen brillar">
-  <!-- Hero Section -->
+<Layout title={`${siteName} - ${siteTagline}`}>
   <section class="relative overflow-hidden bg-gradient-to-b from-rose-50 to-cream-100 pt-8 md:pt-16 pb-12 md:pb-20">
     <div class="container-main text-center">
       <div class="max-w-3xl mx-auto">
@@ -22,7 +23,7 @@ const categorias = categoriasList.map(c => c.slug)
           Detalles que te
           <span class="text-gold-500 block md:inline">hacen brillar</span>
         </h1>
-        <p class="font-script text-xl md:text-2xl text-gold-600 mb-6">N&J Accesorios y Belleza</p>
+        <p class="font-script text-xl md:text-2xl text-gold-600 mb-6">{siteName}</p>
         <p class="text-[#2D2D2D]/70 text-sm md:text-base max-w-xl mx-auto mb-8">
           Descubre nuestra colección de accesorios y belleza. Collares, anillos, labiales y más,
           cuidadosamente seleccionados para ti.
@@ -39,13 +40,10 @@ const categorias = categoriasList.map(c => c.slug)
         </div>
       </div>
     </div>
-
-    <!-- Decorative elements -->
     <div class="absolute top-10 left-10 w-20 h-20 rounded-full bg-rose-200/30 blur-3xl"></div>
     <div class="absolute bottom-10 right-10 w-32 h-32 rounded-full bg-gold-300/20 blur-3xl"></div>
   </section>
 
-  <!-- Categorías -->
   <section class="py-10 md:py-14">
     <div class="container-main">
       <h2 class="section-title mb-8">Categorías</h2>
@@ -53,22 +51,18 @@ const categorias = categoriasList.map(c => c.slug)
         <a href="/productos" class="px-5 py-2.5 rounded-full bg-white border border-rose-100 text-sm font-medium text-[#2D2D2D] hover:bg-rose-50 hover:border-rose-200 transition-colors no-underline shadow-sm">
           Todas
         </a>
-        {categorias.map(cat => (
+        {categoriasList.map(cat => (
           <a
-            href={`/productos?categoria=${cat}`}
+            href={`/productos?categoria=${cat.slug}`}
             class="px-5 py-2.5 rounded-full bg-white border border-rose-100 text-sm font-medium text-[#2D2D2D] hover:bg-rose-50 hover:border-rose-200 transition-colors no-underline capitalize shadow-sm"
           >
-            {cat === 'collares' && '📿 '}
-            {cat === 'anillos' && '💍 '}
-            {cat === 'labiales' && '💄 '}
-            {cat}
+            {cat.title}
           </a>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- Productos Destacados -->
   {destacados.length > 0 && (
     <section class="py-10 md:py-14 bg-white/50">
       <div class="container-main">
@@ -84,7 +78,6 @@ const categorias = categoriasList.map(c => c.slug)
     </section>
   )}
 
-  <!-- Instagram -->
   <section class="py-10 md:py-14">
     <div class="container-main text-center">
       <h2 class="section-title mb-2">Síguenos en Instagram</h2>

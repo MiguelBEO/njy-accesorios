@@ -1,16 +1,15 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 import ProductGrid from '@/components/ProductGrid.astro'
-import { getProductos, getCategorias } from '@/lib/sanity'
+import { getProducts, getProductsByCategory, getCategories } from '@/lib/db'
 
+const db = Astro.locals.runtime.env.DB
 const categoria = Astro.url.searchParams.get('categoria')
-const productos = await getProductos()
-const categoriasList = await getCategorias()
-const categorias = categoriasList.map(c => c.slug)
+const categoriasList = await getCategories(db)
 
-const filtrados = categoria
-  ? productos.filter(p => p.categoriaSlug === categoria)
-  : productos
+const productos = categoria
+  ? await getProductsByCategory(db, categoria)
+  : await getProducts(db)
 
 const tituloPagina = categoria
   ? `Catálogo - ${categoria.charAt(0).toUpperCase() + categoria.slice(1)}`
@@ -27,7 +26,6 @@ const tituloPagina = categoria
           : 'Descubre todos nuestros productos'}
       </p>
 
-      <!-- Filtro de categorías -->
       <div class="flex flex-wrap justify-center gap-2 mb-8">
         <a
           href="/productos"
@@ -39,21 +37,21 @@ const tituloPagina = categoria
         >
           Todas
         </a>
-        {categorias.map(cat => (
+        {categoriasList.map(cat => (
           <a
-            href={`/productos?categoria=${cat}`}
+            href={`/productos?categoria=${cat.slug}`}
             class={`px-4 py-2 rounded-full text-sm font-medium capitalize transition-colors no-underline ${
-              categoria === cat
+              categoria === cat.slug
                 ? 'bg-rose-400 text-white shadow-sm'
                 : 'bg-white border border-rose-100 text-[#2D2D2D] hover:bg-rose-50'
             }`}
           >
-            {cat}
+            {cat.title}
           </a>
         ))}
       </div>
 
-      <ProductGrid productos={filtrados} />
+      <ProductGrid productos={productos} />
     </div>
   </section>
 </Layout>

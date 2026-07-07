@@ -1,9 +1,8 @@
 ---
-import type { ProductoSanity } from '@/lib/sanity'
-import { urlFor } from '@/lib/sanity'
+import type { Product } from '@/lib/db'
 
 export interface Props {
-  producto: ProductoSanity
+  producto: Product
 }
 
 const { producto } = Astro.props
@@ -13,13 +12,17 @@ const { title, precio, categoria, slug, imagen, destacado } = producto
 <div class="product-card group">
   <a href={`/producto/${slug}`} class="block no-underline">
     <div class="aspect-square overflow-hidden bg-rose-50 relative">
-      <img
-        src={urlFor(imagen, 400)}
-        alt={title}
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        loading="lazy"
-      />
-      {destacado && (
+      {imagen ? (
+        <img
+          src={imagen}
+          alt={title}
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          loading="lazy"
+        />
+      ) : (
+        <div class="w-full h-full flex items-center justify-center text-rose-200 text-5xl">💎</div>
+      )}
+      {destacado === 1 && (
         <span class="absolute top-2 left-2 bg-gold-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">🌟 Destacado</span>
       )}
       <span class="absolute top-2 right-2 bg-rose-100 text-rose-700 text-[10px] font-medium px-2 py-0.5 rounded-full capitalize shadow-sm">{categoria}</span>
@@ -35,7 +38,7 @@ const { title, precio, categoria, slug, imagen, destacado } = producto
       data-slug={slug}
       data-title={title}
       data-precio={precio}
-      data-imagen={urlFor(imagen)}
+      data-imagen={imagen || '/images/placeholder.svg'}
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Agregar al carrito
