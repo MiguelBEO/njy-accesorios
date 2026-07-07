@@ -1,9 +1,9 @@
 backend:
   name: github
-  repo: tu-usuario/njy-accesorios
+  repo: MiguelBEO/njy-accesorios
   branch: main
-  base_url: https://github.com
-  auth_endpoint: oauth/authorize
+  base_url: https://api.decapcms.org
+  auth_endpoint: auth
 
 publish_mode: editorial_workflow
 media_folder: public/images
