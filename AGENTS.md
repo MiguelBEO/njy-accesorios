@@ -3,46 +3,44 @@
 ## Sesión: 2026-07-06
 
 ### Stack
-- **Framework:** Astro 5 + Tailwind CSS 3
-- **CMS:** Decap CMS (panel admin en /admin)
-- **Hosting:** Cloudflare Pages
+- **Framework:** Astro 5 + Tailwind CSS 3 + React
+- **Backend:** Cloudflare D1 (SQLite serverless) + Pages Functions
+- **Auth:** Sesión por cookie (usuario/clave en DB)
+- **Admin:** React SPA en `/admin` con login, dashboard, CRUDs
 - **Carrito:** localStorage + checkout WhatsApp
 - **WhatsApp:** +52 618 157 8134
 - **Instagram:** @accesoriosnyv
+- **Hosting:** Cloudflare Pages (https://njy-accesorios.pages.dev)
+
+### Admin Panel
+- **URL:** https://njy-accesorios.pages.dev/admin
+- **Usuario:** NoraWrite
+- **Contraseña:** lcdll22
+- Secciones: Dashboard, Productos (CRUD), Categorías (CRUD), Configuración
 
 ### Estructura del proyecto
 ```
 njy-accesorios/
 ├── src/
-│   ├── layouts/Layout.astro       # Layout principal
+│   ├── lib/
+│   │   ├── db.ts           # Funciones D1 (productos, categorías, settings)
+│   │   └── auth.ts         # Login/logout/validación de sesión
 │   ├── pages/
-│   │   ├── index.astro            # Inicio
-│   │   ├── productos.astro        # Catálogo con filtros
+│   │   ├── index.astro     # Inicio (SSR, datos desde D1)
+│   │   ├── productos.astro # Catálogo con filtros
 │   │   ├── producto/[slug].astro  # Detalle de producto
-│   │   └── sobre-nosotros.astro   # Sobre la marca
+│   │   ├── sobre-nosotros.astro   # Sobre la marca
+│   │   ├── api/            # API routes (login, CRUD productos/categorías/settings)
+│   │   └── admin/[...path].astro  # Admin SPA shell
 │   ├── components/
-│   │   ├── Navbar.astro           # Header con logo + IG
-│   │   ├── Footer.astro           # Footer completo
-│   │   ├── WhatsAppFloat.astro    # Botón flotante WhatsApp
-│   │   ├── MobileTabBar.astro     # Navegación inferior móvil
-│   │   ├── CartIcon.astro         # Ícono carrito con badge
-│   │   ├── CartDrawer.astro       # Drawer carrito con checkout
-│   │   ├── ProductCard.astro      # Tarjeta de producto
-│   │   ├── ProductGrid.astro      # Grid de productos
-│   │   └── AddToCartBtn.astro     # Botón agregar al carrito
-│   ├── content/
-│   │   ├── config.ts              # Schema de productos
-│   │   └── productos/             # Productos en .md
-│   ├── scripts/cart.ts            # Lógica de carrito
-│   └── styles/global.css          # Estilos globales + Tailwind
-├── public/
-│   ├── admin/                     # Decap CMS
-│   │   ├── index.html             # Punto de entrada
-│   │   └── config.yml             # Configuración del CMS
-│   ├── images/placeholder.svg     # Placeholder para productos
-│   └── favicon.svg                # Favicon
-├── astro.config.mjs
-├── tailwind.config.mjs            # Paleta de colores N&J
+│   │   ├── admin/          # React components del admin (9 archivos)
+│   │   ├── Navbar, Footer, CartDrawer, etc.
+│   │   └── ProductCard, ProductGrid
+│   ├── layouts/Layout.astro
+│   └── styles/global.css
+├── db/schema.sql           # Esquema D1
+├── wrangler.toml           # Config Cloudflare (binding D1)
+├── astro.config.mjs        # output: 'server', adapter: @astrojs/cloudflare
 └── package.json
 ```
 
@@ -51,21 +49,19 @@ njy-accesorios/
 - **Tipografía:** Playfair Display (títulos), Montserrat (cuerpo), Great Vibes (script)
 - **Mobile-first:** Tab bar inferior en móvil, drawer carrito, filtros swipe
 
-### Carrito + WhatsApp
-- Los productos se agregan al carrito (almacenado en localStorage)
-- El carrito persiste entre páginas
-- Checkout genera mensaje personalizado con todos los items y total
-- Número WhatsApp: 526181578134 (formato wa.me)
+### Comandos
+- `npm run dev` — desarrollo local
+- `npm run build` — build local
+- `npm run db:migrate` — ejecutar schema.sql en D1 remoto
+- `npx wrangler pages deploy dist --project-name njy-accesorios --branch main` — deploy directo
 
-### Para desplegar
-1. Crear repo en GitHub
-2. Subir código
-3. Conectar Cloudflare Pages al repo
-4. Configurar build: `npm run build` / output: `dist`
-5. Configurar variable de entorno si es necesario
-6. Para el admin: crear GitHub OAuth App y configurar en config.yml
+### D1 Database
+- **Nombre:** njy-db
+- **ID:** 6dc110f1-5390-4fb8-8ae3-61396f104def
+- **Tablas:** products, categories, settings, sessions
+- **Binding:** DB (configurado en Pages dashboard)
 
 ### Build
 - Comando: `npm run build`
-- Output: `dist/`
-- Dev: `npm run dev`
+- Output: `dist/` (contiene `_worker.js/` para SSR)
+- Adapter: `@astrojs/cloudflare` con `output: 'server'`
